@@ -1,0 +1,5 @@
+node_modules
+frontend/dist
+backend/dist
+.env
+assets/music-src

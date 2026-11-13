@@ -1,0 +1,22 @@
+# Local / single-host deployment:  docker compose -f config/docker-compose.yml up --build
+# Set real values for the two secrets below (e.g. in a .env file next to this compose file).
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: shootay
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: shootay
+    volumes: [dbdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U shootay"], interval: 5s, retries: 10 }
+  game:
+    build: { context: .., dockerfile: config/Dockerfile }
+    depends_on: { db: { condition: service_healthy } }
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://shootay:${POSTGRES_PASSWORD}@db:5432/shootay
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET to 32+ random characters}
+      PUBLIC_URL: ${PUBLIC_URL:-}
+    ports: ["3000:3000"]
+volumes: { dbdata: {} }

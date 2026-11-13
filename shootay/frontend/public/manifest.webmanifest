@@ -1,0 +1,11 @@
+{
+  "name": "SHOOTAY",
+  "short_name": "SHOOTAY",
+  "description": "Online multiplayer voxel FPS. Build different. Shoot different.",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0a090d",
+  "theme_color": "#0a090d",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

@@ -82,7 +82,9 @@ for (const slot of CLOTH_SLOTS) {
 }
 // starter wardrobe: one plain piece per essential slot
 for (const id of ['shirt_tee_', 'pants_cargo_', 'shoes_runner_', 'hoodie_pullover_']) {
-  const it = CLOTHING.find((c) => c.id.startsWith(id) && c.rarity === 'common') ?? CLOTHING.find((c) => c.id.startsWith(id))!;
+  const opts = CLOTHING.filter((c) => c.id.startsWith(id));
+  const it = opts.find((c) => c.name.endsWith('Matte Black')) ?? opts.find((c) => c.name.endsWith('Charcoal')) ?? opts[0];
+  if (!/Matte Black|Charcoal/.test(it.name)) { it.name = it.name.replace(/— .*/, '— Charcoal'); it.color = 0x2a2c31; it.color2 = 0x1a1b1e; it.accent = 0x55585f; it.rarity = 'common'; }
   it.starter = true; it.price = 0;
 }
 export const CLOTH_BY_ID: Record<string, ClothingDef> = Object.fromEntries(CLOTHING.map((c) => [c.id, c]));
