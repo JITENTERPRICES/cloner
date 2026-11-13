@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler", "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true, "skipLibCheck": true, "noEmit": true, "esModuleInterop": true, "resolveJsonModule": true,
+    "types": ["node", "vite/client"], "rootDir": ".."
+  },
+  "include": ["../shared", "../backend/src", "../frontend/src", "../database", "../scripts"]
+}

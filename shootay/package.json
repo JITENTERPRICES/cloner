@@ -1,0 +1,44 @@
+{
+  "name": "shootay",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SHOOTAY — online multiplayer voxel FPS. Build different. Shoot different.",
+  "scripts": {
+    "dev": "concurrently -n server,client \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "tsx watch --env-file-if-exists=.env backend/src/index.ts",
+    "dev:client": "vite --config config/vite.config.ts",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build --config config/vite.config.ts",
+    "build:server": "esbuild backend/src/index.ts --bundle --platform=node --format=esm --packages=external --outfile=backend/dist/server.js",
+    "start": "node --env-file-if-exists=.env backend/dist/server.js",
+    "db:setup": "tsx --env-file-if-exists=.env database/setup.ts",
+    "audio:extract": "bash scripts/extract-audio.sh",
+    "typecheck": "tsc -p config/tsconfig.json --noEmit",
+    "test": "tsx scripts/verify-data.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.4",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.1",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "@types/three": "^0.187.0",
+    "concurrently": "^10.0.7",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  }
+}

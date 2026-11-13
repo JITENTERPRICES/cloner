@@ -1,0 +1,9 @@
+node_modules/
+frontend/dist/
+backend/dist/
+.env
+# Supplied soundtrack sources and their extracted audio are not committed (distribution rights stay with the owner)
+assets/music-src/*
+!assets/music-src/.gitkeep
+assets/music/*
+!assets/music/.gitkeep
