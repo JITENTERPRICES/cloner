@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEON RUNNER</title>
+<style>
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:#09091c;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+h1 {
+  color:#00f5ff;
+  text-shadow:0 0 15px #00f5ff;
+  margin-top:25px;
+}
+canvas {
+  width:95%;
+  max-width:500px;
+  background:#15152d;
+  border:2px solid #00f5ff;
+  border-radius:12px;
+  touch-action:manipulation;
+}
+button {
+  background:#00eaff;
+  color:#09091c;
+  padding:15px 35px;
+  border:0;
+  border-radius:10px;
+  font-size:18px;
+  font-weight:bold;
+  margin:15px;
+}
+</style>
+</head>
+<body>
+
+<h1>NEON RUNNER</h1>
+<p>COINS: <span id="coins">0</span></p>
+<p>SCORE: <span id="score">0</span></p>
+
+<canvas id="game" width="360" height="500"></canvas>
+
+<br>
+<button onclick="startGame()">START GAME</button>
+<p>Tap the game to jump!</p>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let player, obstacles, coins, score, coinCount;
+let running = false;
+let frame = 0;
+
+function reset() {
+  player = {x:65,y:400,w:30,h:30,vy:0};
+  obstacles = [];
+  coins = [];
+  score = 0;
+  coinCount = 0;
+  frame = 0;
+}
+
+function jump() {
+  if (!running) return;
+  if (player.y >= 400) player.vy = -13;
+}
+
+canvas.addEventListener("pointerdown", jump);
+
+function startGame() {
+  reset();
+  running = true;
+  loop();
+}
+
+function draw() {
+  ctx.clearRect(0,0,360,500);
+
+  ctx.fillStyle="#00f5ff";
+  ctx.fillRect(player.x,player.y,player.w,player.h);
+
+  ctx.fillStyle="#ff286e";
+  obstacles.forEach(o=>{
+    ctx.fillRect(o.x,o.y,o.w,o.h);
+  });
+
+  ctx.fillStyle="#ffe600";
+  coins.forEach(c=>{
+    ctx.beginPath();
+    ctx.arc(c.x,c.y,9,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.fillStyle="white";
+  ctx.font="16px Arial";
+  ctx.fillText("NEON CITY",130,30);
+}
+
+function loop() {
+  if (!running) return;
+
+  frame++;
+  player.vy += 0.6;
+  player.y += player.vy;
+
+  if(player.y > 400) {
+    player.y = 400;
+    player.vy = 0;
+  }
+
+  if(frame % 90 === 0) {
+    obstacles.push({x:360,y:410,w:25,h:30});
+  }
+
+  if(frame % 110 === 0) {
+    coins.push({x:360,y:365});
+  }
+
+  obstacles.forEach(o=>o.x-=4);
+  coins.forEach(c=>c.x-=4);
+
+  obstacles = obstacles.filter(o=>o.x>-40);
+  coins = coins.filter(c=>c.x>-20);
+
+  for(let o of obstacles) {
+    if(player.x < o.x+o.w &&
+       player.x+player.w > o.x &&
+       player.y < o.y+o.h &&
+       player.y+player.h > o.y) {
+      running=false;
+      alert("GAME OVER! Score: "+score);
+      return;
+    }
+  }
+
+  coins = coins.filter(c=>{
+    if(Math.abs(player.x-c.x)<25 &&
+       Math.abs(player.y-c.y)<25) {
+      coinCount++;
+      return false;
+    }
+    return true;
+  });
+
+  score++;
+  document.getElementById("score").textContent=score;
+  document.getElementById("coins").textContent=coinCount;
+
+  draw();
+  requestAnimationFrame(loop);
+}
+
+reset();
+draw();
+</script>
+</body>
+</html>
